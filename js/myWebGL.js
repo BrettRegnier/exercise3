@@ -107,6 +107,8 @@ window.onload = function () {
 		
 		cube.geometry.verticesNeedUpdate = true;
 		prevIndex = idx;
+		
+		// maybe switch to using scaling instead.
 	}
 
 	function Render() {
