@@ -6,6 +6,7 @@ window.onload = function () {
 	var sphere;
 	var cube;
 	var cubeVertices = [];
+	var cubeReversing = [false, false, false, false, false, false, false, false];
 	var cubeCenter = [];
 	var sphereLoaded = false;
 	var cubeLoaded = false;
@@ -87,13 +88,17 @@ window.onload = function () {
 		var vertices = cube.geometry.vertices;
 		for (var i = 0; i < vertices.length; i++) {
 			// X
-			var xdir = 1; // This is to stop it from getting to big and then immediately shrinking down, it reverses the growth
-			if (vertices[i].x > cubeVertices[i] + 10)
-				xdir *= -1;
-			if (vertices[i].x < cubeVertices[i] - 10)
+			var xdir = -1; // This is to stop it from getting to big and then immediately shrinking down, it reverses the growth
+			// if (vertices[i].x > cubeVertices[i].x + 10 || vertices[i].x < cubeVertices[i].x - 10)
+			// 	cubeReversing[i] = true;
+				
+			if (!(vertices[i].x < cubeVertices[i].x + 0.2 && vertices[i].x > cubeVertices[i].x + 0.2))
+				xdir = 1;
+				
+			if (cubeReversing[i])
 				xdir *= -1;
 			
-			var newX = Math.random() * 10 * xdir;
+			var newX = Math.random() * 0.1 * xdir;
 			if (vertices[i].x < 0)
 				newX *= -1;
 				
@@ -109,10 +114,10 @@ window.onload = function () {
 			sphere.rotation.y += 0.01;
 
 		if (cubeLoaded) {
-			cube.rotation.x += 0.01;
-			cube.rotation.y += 0.01;
+			// cube.rotation.x += 0.01;
+			// cube.rotation.y += 0.01;
 			
-			// AnimateCube();
+			AnimateCube();
 		}
 		renderer.render(scene, camera);
 		requestAnimationFrame(Render);
