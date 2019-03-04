@@ -4,10 +4,8 @@ window.onload = function () {
 	var camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
 	var renderer = new THREE.WebGLRenderer({ alpha: true });
 	var sphere;
-	var cube;
-	var cubeVertices = [];
-	var cubeReversing = [false, false, false, false, false, false, false, false];
-	var cubeCenter = [];
+	var cubes = [];
+	var scales = [];
 	var sphereLoaded = false;
 	var cubeLoaded = false;
 
@@ -32,25 +30,9 @@ window.onload = function () {
 		});
 	}
 
-	function LoadSquare() {
-		var w = 10; var h = 10; var d = 10;
-		var center = [0, 0, 0];
-		var geometry = new THREE.BoxGeometry(w, h, d);
-		var material = new THREE.MeshNormalMaterial();
-		cube = new THREE.Mesh(geometry, material);
-		cube.position.x = -20;
-		center[0] += -20;
-		scene.add(cube);
-		
-		for (var i = 0; i < cube.geometry.vertices.length; i++)
-		{
-			vector = cube.geometry.vertices[i];
-			cubeVertices.push({ "x":vector.x, "y":vector.y, "z":vector.z });
-			
-			cubeCenter.push()
-		}
-		// cubeVertices = Array.from(cube.geometry.vertices);
-			
+	function FirstCube() {
+		BuildCube();
+
 		cubeLoaded = true;
 	}
 
@@ -82,51 +64,86 @@ window.onload = function () {
 		scene.add(light);
 	}
 
-	var prevIndex = -1;
-	function AnimateCube() {
-		var idx = -1; 
-		var vertices = cube.geometry.vertices;
-		for (var i = 0; i < vertices.length; i++) {
-			// X
-			var xdir = -1; // This is to stop it from getting to big and then immediately shrinking down, it reverses the growth
-			// if (vertices[i].x > cubeVertices[i].x + 10 || vertices[i].x < cubeVertices[i].x - 10)
-			// 	cubeReversing[i] = true;
-				
-			if (!(vertices[i].x < cubeVertices[i].x + 0.2 && vertices[i].x > cubeVertices[i].x + 0.2))
-				xdir = 1;
-				
-			if (cubeReversing[i])
-				xdir *= -1;
-			
-			var newX = Math.random() * 0.1 * xdir;
-			if (vertices[i].x < 0)
-				newX *= -1;
-				
-			vertices[i].x += newX;
-		}
-		
-		cube.geometry.verticesNeedUpdate = true;
-		prevIndex = idx;
-		
-		// maybe switch to using scaling instead.
+	function BreatheCube(cube, scale) {
+
+		if (cube.scale.x > 5) scale.x = -(Math.random() * 0.1353);
+		else if (cube.scale.x < 0.2) scale.x = Math.random() * 0.1332;
+
+		if (cube.scale.y > 5) scale.y = -(Math.random() * 0.11112);
+		else if (cube.scale.y < 0.2) scale.y = Math.random() * 0.14;
+
+		if (cube.scale.z > 5) scale.z = -(Math.random() * 0.11);
+		else if (cube.scale.z < 0.2) scale.z = Math.random() * 0.12;
+
+		cube.scale.x += scale.x;
+		cube.scale.y += scale.y;
+		cube.scale.z += scale.z;
 	}
 
 	function Render() {
 		if (sphereLoaded)
 			sphere.rotation.y += 0.01;
 
-		if (cubeLoaded) {
-			// cube.rotation.x += 0.01;
-			// cube.rotation.y += 0.01;
-			
-			AnimateCube();
+		if (cubeLoaded)
+		{
+			for (var i = 0; i < cubes.length; i++)
+			{
+				var cube = cubes[i];
+				var scale = scales[i];
+				
+				cube.rotation.x += (Math.random() * 0.0127576) + 0.01;
+				cube.rotation.y += (Math.random() * 0.02213124) + 0.01;
+				cube.rotation.z += (Math.random() * 0.01555322313124) + 0.01;
+
+				BreatheCube(cube, scale);
+			}
 		}
 		renderer.render(scene, camera);
 		requestAnimationFrame(Render);
 	}
 
+	function BuildCube() {
+		var w = 10; var h = 10; var d = 10;
+		var geometry = new THREE.BoxGeometry(w, h, d);
+		var material = new THREE.MeshNormalMaterial();
+		var cubeVertices = [];
+		var scale = { "x": 0.01, "y": 0.01, "z": 0.01 }
+
+		cube = new THREE.Mesh(geometry, material);
+		cube.position.x = (Math.random() * 200) - 100;
+		cube.position.y = (Math.random() * 100) - 50;
+		cube.position.z = -20;
+		cube.name = "cube" + cubes.length;
+		scene.add(cube);
+
+		for (var i = 0; i < cube.geometry.vertices.length; i++)
+		{
+			vector = cube.geometry.vertices[i];
+			cubeVertices.push({ "x": vector.x, "y": vector.y, "z": vector.z });
+		}
+
+		scales.push(scale);
+		cubes.push(cube);
+	}
+
+	function KillRandomCube() {
+		var idx = Math.round(Math.random() * cubes.length);
+		var name = cubes[idx].name;
+		var obj = scene.getObjectByName(name);
+		cubes.splice(idx, 1);
+		scales.splice(idx, 1);
+		scene.remove(obj);
+	}
+
+	document.getElementById("spawnCube").addEventListener("click", function () {
+		BuildCube();
+	});
+	document.getElementById("killCube").addEventListener("click", function () {
+		KillRandomCube();
+	});
+
 	AddLighting();
 	LoadSphere();
-	LoadSquare();
+	FirstCube();
 	Render();
 }

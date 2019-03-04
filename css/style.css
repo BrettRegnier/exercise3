@@ -13,3 +13,44 @@ body {
 	height: 100%;
 	overflow: hidden;
 }
+
+canvas {
+	position: absolute;
+	z-index: 0;
+	top: 0;
+	left: 0;
+}
+
+.canvas_buttons {
+	position: absolute;
+	z-index: 100;
+	top: 0;
+	left: 0;
+	border-bottom: 1px solid #404040;
+	width: 100%;
+}
+
+.canvas_buttons__list {
+	width: 100%;
+}
+
+.canvas_buttons__item {
+	list-style: none;
+	float: left;
+}
+
+.canvas_buttons__button {
+	cursor: pointer;
+	padding-left: 20px;
+	padding-right: 20px;
+	border-left: 1px solid green;
+	border-right: 1px solid green;
+	margin-left: 2px;
+	margin-right: 2px;
+	user-select: none;
+}
+
+.canvas_buttons__button:active {
+	background-color: #404040;
+	color: #ffffff;
+}

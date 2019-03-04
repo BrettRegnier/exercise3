@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset=utf-8>
-		<meta name="viewport" content="width=device-width, inital-scale=1.0">
-		<title>Exercise 3</title>
-		<link rel="stylesheet" href="css/style.css">
-	</head>
-	<body>
-		<script src="js/three.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
-		<script src="js/myWebGL.js"></script>
-	</body>
+
+<head>
+	<meta charset=utf-8>
+	<meta name="viewport" content="width=device-width, inital-scale=1.0">
+	<title>Exercise 3</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+	<section class="canvas_buttons">
+		<ul class="canvas_buttons__list">
+			<li class="canvas_buttons__item">
+				<a id="spawnCube" class="canvas_buttons__button">Spawn Cube</a>
+			</li>
+			<li class="canvas_buttons__item">
+				<a id="killCube" class="canvas_buttons__button">Kill Random Cube</a>
+			</li>
+		</ul>
+	</section>
+	<!-- the canvas is inserted via javascript -->
+	<script src="js/three.js"></script>
+	<script src="js/myWebGL.js"></script>
+</body>
+
 </html>
